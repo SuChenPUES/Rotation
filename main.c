@@ -24,6 +24,18 @@ void main(void)
 	for (i = 0; i < 4; i ++) 
 
 	{
+		/*“ü—ÍƒŠƒ~ƒbƒgðŒ*/
+		if(N_MOT_MTC[i] < (-32767))
+		{
+			N_MOT_MTC[i] = (-32767);
+		}
+		
+		else if(N_MOT_MTC[i] > 32767)
+		{
+			N_MOT_MTC[i] = 32767;
+		}
+		
+		
 		/*| N_MOT_MTC | † NE0JD ‚Ìê‡*/
 		if (abs(N_MOT_MTC[i]) > NE0JD || abs(N_MOT_MTC[i]) == NE0JD)
 		{
