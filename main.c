@@ -17,7 +17,7 @@ void main(void)
 	int N_MOT_MTC[5] = {10000,-20000,5000,-33000,32000};/*ドライバー側から受信するモーター推定回転数(ケース配列)*/
 	
 	int NE[5];/*アプリケーション制御用モーター回転数(目標配列)*/
-	int F_MOTSTP;/*モータ状態フラグ(1:停止中;0:回転中*/
+	int F_MOTSTP[5];/*モータ状態フラグ(1:停止中;0:回転中*/
 	
 	int i = 0;
 
@@ -50,7 +50,7 @@ void main(void)
 				NE[i] = 32767;
 			}
 			
-			F_MOTSTP = 0;
+			F_MOTSTP[i] = 0;
 			
 		}
 		
@@ -68,7 +68,7 @@ void main(void)
 				NE[i] = 32767;
 			}
 			
-			F_MOTSTP = 1;
+			F_MOTSTP[i] = 1;
 			
 		}
 		
