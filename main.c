@@ -9,7 +9,60 @@
 /*                                                                     */
 /***********************************************************************/
 
+void cal_rotation(int *MotRev, int *MotFlag, int ThresholdRev, int DriverRev);
+
 void main(void);
+
+void cal_rotation(int *MotRev, int *MotFlag, int ThresholdRev, int DriverRev)
+{
+	/*入力リミット条件*/
+	if(DriverRev < (-32767))
+	{
+		DriverRev = (-32767);
+	}
+		
+	else if(DriverRev > 32767)
+	{
+		DriverRev = 32767;
+	}
+		
+		
+	/*| N_MOT_MTC | ≧ NE0JD の場合*/
+	if (abs(DriverRev) > ThresholdRev || abs(DriverRev) == ThresholdRev)
+	{
+		*MotRev = DriverRev;
+			
+		if (*MotRev < (-32767))
+		{
+			*MotRev = -32767;
+		}
+		else if (*MotRev > 32767)
+		{
+			*MotRev = 32767;
+		}
+			
+		*MotFlag = 0;
+			
+	}
+		
+	/*| N_MOT_MTC | ＜ NE0JD の場合*/
+	if (abs(DriverRev) < ThresholdRev)
+	{
+		*MotRev = 0;
+			
+		if (*MotRev < (-32767))
+		{
+			*MotRev = -32767;
+		}
+		else if (*MotRev > 32767)
+		{
+			*MotRev = 32767;
+		}
+			
+		*MotFlag = 1;
+			
+	}
+}
 
 void main(void)
 {
@@ -18,59 +71,12 @@ void main(void)
 	
 	int NE[5];/*アプリケーション制御用モーター回転数(目標配列)*/
 	int F_MOTSTP[5];/*モータ状態フラグ(1:停止中;0:回転中*/
+
+	int i;
 	
-	int i = 0;
-
+	/*実行開始*/
 	for (i = 0; i < 5; i ++) 
-
 	{
-		/*入力リミット条件*/
-		if(N_MOT_MTC[i] < (-32767))
-		{
-			N_MOT_MTC[i] = (-32767);
-		}
-		
-		else if(N_MOT_MTC[i] > 32767)
-		{
-			N_MOT_MTC[i] = 32767;
-		}
-		
-		
-		/*| N_MOT_MTC | ≧ NE0JD の場合*/
-		if (abs(N_MOT_MTC[i]) > NE0JD || abs(N_MOT_MTC[i]) == NE0JD)
-		{
-			NE[i] = N_MOT_MTC[i];
-			
-			if (NE[i] < (-32767))
-			{
-				NE[i] = -32767;
-			}
-			else if (NE[i] > 32767)
-			{
-				NE[i] = 32767;
-			}
-			
-			F_MOTSTP[i] = 0;
-			
-		}
-		
-		/*| N_MOT_MTC | ＜ NE0JD の場合*/
-		if (abs(N_MOT_MTC[i]) < NE0JD)
-		{
-			NE[i] = 0;
-			
-			if (NE[i] < (-32767))
-			{
-				NE[i]=-32767;
-			}
-			else if (NE[i] > 32767)
-			{
-				NE[i] = 32767;
-			}
-			
-			F_MOTSTP[i] = 1;
-			
-		}
-		
+		cal_rotation(&NE[i], &F_MOTSTP[i], NE0JD, N_MOT_MTC[i]);
 	}
 }
